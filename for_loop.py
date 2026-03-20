@@ -13,7 +13,7 @@ print(numbers)
 evennums=list(range(2,21,2)) #this will generate a list of even numbers from 2 to 20 (the third argument in the range function specifies the step size, so it will skip every other number)
 print(evennums)
 
-# below is an example of ** to calculate the square of a number(value**x(in py.)==pow(value,x)in c.)
+
 
 squares=[] #this will create an empty list to store the squares of the numbers
 for value in range(1,11):
@@ -33,6 +33,17 @@ print(max(digits))
 print(sum(digits)) 
 
 #exercise: use a for loop to generate a list of the first 10 cubes (the cube of a number is that number raised to the third power)
-cubes=[value**3 for value in range(1,11)]
+cubes=[pow(value, 3) for value in range(1,11)]
 print(cubes)
+#actually, in python, you can still use pow() like C or other languages.
+
+#below are patial list slicing
+players=['charles', 'martina', 'michael', 'florence', 'eli']
+print(players[0:3]) #this will print the first three players in the list (the 0:3 stops before 3 ,so it will print the elements at indices 0, 1, and 2)
+
+#0:3 is similar to MATLAB's 1:3, but in python, the index starts at 0, so the first element is at index 0, the second element is at index 1, and so on. Therefore, the slice 0:3 will include the elements at indices 0, 1, and 2, which are 'charles', 'martina', and 'michael'.
+# :3 is also similar to 1:3 in MATLAB, but it will include all the elements from the beginning of the list up to (but not including) index 3. 
+#3: is similar to 4:end in MATLAB, but it will include all the elements from index 3 to the end of the list. 
+#negative such as -3: will include all the elements from the third-to-last element to the end of the list. (Note that the direction is still from left to right)
+print(players[-3:])
 
