@@ -47,3 +47,10 @@ print(players[0:3]) #this will print the first three players in the list (the 0:
 #negative such as -3: will include all the elements from the third-to-last element to the end of the list. (Note that the direction is still from left to right)
 print(players[-3:])
 
+#below are some examples of copying a list
+my_foods=['pizza', 'falafel', 'carrot cake']
+friend_foods=my_foods[:] 
+print("My favorite foods are:")
+print(my_foods)
+print("\nMy friend's favorite foods are:")
+print(friend_foods)
