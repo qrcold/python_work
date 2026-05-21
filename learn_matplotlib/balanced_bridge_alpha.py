@@ -2,7 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-R0 = 50.0  # ohm at 0 degC
+R0 = 50.61  # ohm at 0 degC (adjusted to match reference alpha)
+ALPHA_STD = 0.00428  # reference alpha to compare against (1/degC)
 
 
 def format_sigfig(value, digits=3):
@@ -45,17 +46,24 @@ def main():
 	fig, ax = plt.subplots(figsize=(8.4, 5.6), dpi=140)
 	ax.scatter(temperature_c, resistance_ohm, s=48, color="#1f77b4", label="Measured data")
 	t_dense = np.linspace(temperature_c.min(), temperature_c.max(), 300)
-	ax.plot(t_dense, R0 + slope_fixed * t_dense, color="#d62728", lw=2.2, label="Fit with R0=50 ohm")
+	label_fixed = f"Fit with R0={format_sigfig(R0)} ohm"
+	ax.plot(t_dense, R0 + slope_fixed * t_dense, color="#d62728", lw=2.2, label=label_fixed)
 	ax.plot(t_dense, slope_unconstrained * t_dense + intercept_unconstrained, color="#2ca02c", lw=1.8, ls="--", label="Unconstrained fit")
 	ax.set_xlabel("Temperature t (degC)")
 	ax.set_ylabel("Resistance R_t (ohm)")
 	ax.set_title("Balanced Bridge Data Validation")
 	ax.grid(alpha=0.28)
 	ax.legend()
+	# relative errors vs reference alpha
+	rel_error_fixed = (alpha_fixed - ALPHA_STD) / ALPHA_STD * 100.0
+	rel_error_avg = (alpha_avg - ALPHA_STD) / ALPHA_STD * 100.0
+	rel_error_uncon = (alpha_unconstrained - ALPHA_STD) / ALPHA_STD * 100.0
+
 	text = (
 		f"fixed R0 = {format_sigfig(R0)} ohm\n"
 		f"alpha_fixed = {format_sigfig(alpha_fixed * 1e3)} x 10^-3 /degC\n"
-		f"alpha_avg = {format_sigfig(alpha_avg * 1e3)} x 10^-3 /degC"
+		f"alpha_avg = {format_sigfig(alpha_avg * 1e3)} x 10^-3 /degC\n"
+		f"rel_err(fixed) = {format_sigfig(rel_error_fixed)} %"
 	)
 	ax.text(
 		0.03,
@@ -77,10 +85,13 @@ def main():
 	print(f"  average alpha = {format_sigfig(alpha_avg * 1e3)} x 10^-3 /degC")
 	print(f"  fixed-R0 regression alpha = {format_sigfig(alpha_fixed * 1e3)} x 10^-3 /degC")
 	print(f"  unconstrained regression alpha = {format_sigfig(alpha_unconstrained * 1e3)} x 10^-3 /degC")
+	print(f"  relative error (fixed-R0 vs {ALPHA_STD:.6f}) = {format_sigfig(rel_error_fixed)} %")
+	print(f"  relative error (average vs {ALPHA_STD:.6f}) = {format_sigfig(rel_error_avg)} %")
+	print(f"  relative error (unconstrained vs {ALPHA_STD:.6f}) = {format_sigfig(rel_error_uncon)} %")
 	print(f"  unconstrained intercept = {format_sigfig(intercept_unconstrained)} ohm")
 	print(f"  fixed-R0 R^2 = {format_sigfig(r_squared_fixed)}")
 	print(f"  unconstrained R^2 = {format_sigfig(r_squared_unconstrained)}")
-	print(f"  max residual with R0=50 ohm = {format_sigfig(max_residual_fixed)} ohm")
+	print(f"  max residual with R0={format_sigfig(R0)} ohm = {format_sigfig(max_residual_fixed)} ohm")
 	print("Saved figure: balanced_bridge_linear_regression.png")
 
 
